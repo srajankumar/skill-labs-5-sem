@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "username": "example_user",
+    "password": "$2b$10$JmKgx1NK8zCY3QRvItLQLOxUDk9ihbEqkEyl5OnLSPFvV4h1KUkda"
+  },
+  {
+    "id": 2,
+    "username": "another_user",
+    "password": "$2b$10$JmKgx1NK8zCY3QRvItLQLOxUDk9ihbEqkEyl5OnLSPFvV4h1KUkda"
+  },
+  {
+    "id": 3,
+    "username": "srajankumar",
+    "password": "$2b$10$vmsrmeh13tvWPDAifr01CuIDOyWSi5ewtqZSvDBHROFGmP4tDnB3O"
+  }
+]
