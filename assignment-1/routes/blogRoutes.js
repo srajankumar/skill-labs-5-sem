@@ -7,7 +7,6 @@ const {
 } = require("../controllers/blogController");
 const { validateAuthorId } = require("../middleware/authMiddleware");
 
-// Blog Routes
 router.get("/", getAllBlogs);
 router.post("/", createBlog);
 router.get("/:authorId", validateAuthorId, getBlogByAuthorId);
