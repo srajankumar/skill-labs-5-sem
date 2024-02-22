@@ -2,15 +2,7 @@ const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-// Define the user schema
-const userSchema = new mongoose.Schema({
-  username: { type: String, unique: true },
-  password: String,
-});
-
-// Create a Mongoose model
-const User = mongoose.model("User", userSchema);
-
+const User = require("../models/User");
 // Connect to MongoDB
 mongoose
   .connect(process.env.MONGODB_URI, {

@@ -1,15 +1,6 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
-
-// Define the blog schema
-const blogSchema = new mongoose.Schema({
-  authorId: Number,
-  title: String,
-  content: String,
-});
-
-// Create a Mongoose model
-const Blog = mongoose.model("Blog", blogSchema);
+const { Blog } = require("../models/Blog"); // Update the path to your blog model
 
 // Connect to MongoDB
 mongoose
