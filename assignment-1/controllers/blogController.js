@@ -55,8 +55,25 @@ const getBlogByAuthorId = async (req, res) => {
   }
 };
 
+const searchBlogs = async (req, res) => {
+  const query = req.query.q;
+  try {
+    const matchingBlogs = await Blog.find({
+      $or: [
+        { title: { $regex: query, $options: "i" } }, // Case-insensitive search in title
+        { content: { $regex: query, $options: "i" } }, // Case-insensitive search in content
+      ],
+    });
+    res.status(200).json(matchingBlogs);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error searching blogs" });
+  }
+};
+
 module.exports = {
   getAllBlogs,
   createBlog,
   getBlogByAuthorId,
+  searchBlogs,
 };
