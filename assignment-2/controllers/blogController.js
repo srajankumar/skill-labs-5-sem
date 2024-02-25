@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const { Blog } = require("../models/Blog"); // Update the path to your blog model
 
+const { getCachedData, cacheData } = require("../middleware/cache");
+
 // Connect to MongoDB
 mongoose
   .connect(process.env.MONGODB_URI, {
@@ -12,8 +14,14 @@ mongoose
   .catch((err) => console.error("Error connecting to MongoDB:", err));
 
 const getAllBlogs = async (req, res) => {
+  const cachedBlogs = getCachedData("allBlogs");
+  if (cachedBlogs) {
+    return res.status(200).json(cachedBlogs);
+  }
+
   try {
     const blogs = await Blog.find();
+    cacheData("allBlogs", blogs);
     res.status(200).json(blogs);
   } catch (err) {
     console.error(err);
@@ -37,8 +45,16 @@ const createBlog = async (req, res) => {
 
 const getBlogByAuthorId = async (req, res) => {
   const authorId = parseInt(req.params.authorId);
+  const cacheKey = `authorBlogs_${authorId}`;
+
+  const cachedBlogs = getCachedData(cacheKey);
+  if (cachedBlogs) {
+    return res.status(200).json(cachedBlogs);
+  }
+
   try {
     const authorBlogs = await Blog.find({ authorId: authorId });
+    cacheData(cacheKey, authorBlogs);
     res.status(200).json(authorBlogs);
   } catch (err) {
     console.error(err);
@@ -48,13 +64,21 @@ const getBlogByAuthorId = async (req, res) => {
 
 const searchBlogs = async (req, res) => {
   const query = req.query.q;
+  const cacheKey = `searchResults_${query}`;
+
+  const cachedBlogs = getCachedData(cacheKey);
+  if (cachedBlogs) {
+    return res.status(200).json(cachedBlogs);
+  }
+
   try {
     const matchingBlogs = await Blog.find({
       $or: [
-        { title: { $regex: query, $options: "i" } }, // Case-insensitive search in title
-        { content: { $regex: query, $options: "i" } }, // Case-insensitive search in content
+        { title: { $regex: query, $options: "i" } },
+        { content: { $regex: query, $options: "i" } },
       ],
     });
+    cacheData(cacheKey, matchingBlogs);
     res.status(200).json(matchingBlogs);
   } catch (err) {
     console.error(err);
