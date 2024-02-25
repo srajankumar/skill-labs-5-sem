@@ -7,6 +7,7 @@ const {
   searchBlogs,
   subscribeUserToBlog,
   getBlogsByCategory,
+  getBlogsInDateRange,
 } = require("../controllers/blogController");
 const { validateAuthorId } = require("../middleware/authMiddleware");
 
@@ -20,5 +21,6 @@ router.get("/:authorId", validateAuthorId, getBlogByAuthorId);
 
 router.post("/:blogId/subscribe", subscribeUserToBlog);
 router.get("/category/:categoryName", getBlogsByCategory);
+router.get("/dateRange", getBlogsInDateRange);
 
 module.exports = router;

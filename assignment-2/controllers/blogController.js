@@ -129,6 +129,28 @@ const getBlogsByCategory = async (req, res) => {
   }
 };
 
+const getBlogsInDateRange = async (req, res) => {
+  const { startDate, endDate } = req.query;
+
+  try {
+    // Convert start and end date strings to Date objects
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    // Query the database to find all blog posts within the specified date range
+    const posts = await Blog.find({
+      createdAt: { $gte: start, $lte: end },
+    });
+
+    res.status(200).json(posts);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "Error fetching blog posts within date range" });
+  }
+};
+
 module.exports = {
   getAllBlogs,
   createBlog,
@@ -136,4 +158,5 @@ module.exports = {
   searchBlogs,
   subscribeUserToBlog,
   getBlogsByCategory,
+  getBlogsInDateRange,
 };
