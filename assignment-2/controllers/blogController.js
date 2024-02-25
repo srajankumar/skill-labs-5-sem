@@ -151,6 +151,48 @@ const getBlogsInDateRange = async (req, res) => {
   }
 };
 
+const getBlogsWithReviewStats = async (req, res) => {
+  try {
+    const authorId = req.params.authorId;
+
+    const aggregationPipeline = [
+      {
+        $match: {
+          activeSubscriber: true,
+        },
+      },
+      {
+        $group: {
+          _id: "$authorId",
+          totalBlogs: { $sum: 1 },
+          blogTitle: { $first: "$blogTitle" },
+          avgBlogLength: { $avg: { $strLenCP: "$blogContent" } },
+        },
+      },
+      {
+        $sort: {
+          totalBlogs: -1,
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          authorId: "$_id",
+          totalBlogs: 1,
+          blogTitle: 1,
+          avgBlogLength: 1,
+        },
+      },
+    ];
+    const aggregateData = await Blog.aggregate(aggregationPipeline).exec();
+    console.log(aggregateData);
+    res.json(aggregateData);
+  } catch (error) {
+    console.error("Error fetching total blogs:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   getAllBlogs,
   createBlog,
@@ -159,4 +201,5 @@ module.exports = {
   subscribeUserToBlog,
   getBlogsByCategory,
   getBlogsInDateRange,
+  getBlogsWithReviewStats,
 };
