@@ -1,14 +1,15 @@
-const mongoose = require("mongoose"); // Import mongoose module
-// Define the blog schema
+const mongoose = require("mongoose");
+
 const blogSchema = new mongoose.Schema({
   title: String,
   content: String,
-  author: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // Reference to the User who authored the blog post
+  authorId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
+  subscribedUserId: String,
+  activeSubscriber: Boolean,
 });
 
-// Create a Mongoose model for Blog
 const Blog = mongoose.model("Blog", blogSchema);
 
 module.exports = {
