@@ -31,10 +31,10 @@ const getAllBlogs = async (req, res) => {
 };
 
 const createBlog = async (req, res) => {
-  const { authorId, title, content } = req.body;
+  const { authorId, title, category, content } = req.body;
 
   try {
-    const newBlog = await Blog.create({ authorId, title, content });
+    const newBlog = await Blog.create({ authorId, title, category, content });
     res
       .status(201)
       .json({ message: "Blog created successfully", blog: newBlog });
@@ -115,10 +115,25 @@ const subscribeUserToBlog = async (req, res) => {
   }
 };
 
+const getBlogsByCategory = async (req, res) => {
+  const { categoryName } = req.params;
+
+  try {
+    // Query the database to find blog posts with the specified category
+    const blogs = await Blog.find({ category: categoryName });
+
+    res.status(200).json(blogs);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error fetching blog posts by category" });
+  }
+};
+
 module.exports = {
   getAllBlogs,
   createBlog,
   getBlogByAuthorId,
   searchBlogs,
   subscribeUserToBlog,
+  getBlogsByCategory,
 };

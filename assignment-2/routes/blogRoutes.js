@@ -6,6 +6,7 @@ const {
   getBlogByAuthorId,
   searchBlogs,
   subscribeUserToBlog,
+  getBlogsByCategory,
 } = require("../controllers/blogController");
 const { validateAuthorId } = require("../middleware/authMiddleware");
 
@@ -18,5 +19,6 @@ router.post("/", createBlog);
 router.get("/:authorId", validateAuthorId, getBlogByAuthorId);
 
 router.post("/:blogId/subscribe", subscribeUserToBlog);
+router.get("/category/:categoryName", getBlogsByCategory);
 
 module.exports = router;
