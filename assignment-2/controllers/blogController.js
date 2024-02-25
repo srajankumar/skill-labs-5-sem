@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
 const { Blog } = require("../models/Blog"); // Update the path to your blog model
+const User = require("../models/User"); // Import your User model
 
 const { getCachedData, cacheData } = require("../middleware/cache");
 
@@ -86,9 +87,38 @@ const searchBlogs = async (req, res) => {
   }
 };
 
+const subscribeUserToBlog = async (req, res) => {
+  const { userId } = req.body;
+  const { blogId } = req.params;
+
+  try {
+    // Find the user and the blog
+    const user = await User.findById(userId);
+    const blog = await Blog.findById(blogId);
+
+    if (!user || !blog) {
+      return res.status(404).json({ error: "User or blog not found" });
+    }
+
+    // Add the user to the blog's subscribers array
+    blog.subscribers.push(userId);
+    await blog.save();
+
+    // Add the blog to the user's subscribedBlogs array
+    user.subscribedBlogs.push(blogId);
+    await user.save();
+
+    res.status(200).json({ message: "User subscribed to blog successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 module.exports = {
   getAllBlogs,
   createBlog,
   getBlogByAuthorId,
   searchBlogs,
+  subscribeUserToBlog,
 };

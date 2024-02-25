@@ -4,7 +4,8 @@ const {
   getAllBlogs,
   createBlog,
   getBlogByAuthorId,
-  searchBlogs, // Include the searchBlogs controller function
+  searchBlogs,
+  subscribeUserToBlog,
 } = require("../controllers/blogController");
 const { validateAuthorId } = require("../middleware/authMiddleware");
 
@@ -15,5 +16,7 @@ router.get("/search", searchBlogs); // Define a new route for searching blogs
 router.get("/", getAllBlogs);
 router.post("/", createBlog);
 router.get("/:authorId", validateAuthorId, getBlogByAuthorId);
+
+router.post("/:blogId/subscribe", subscribeUserToBlog);
 
 module.exports = router;

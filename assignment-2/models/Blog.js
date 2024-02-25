@@ -6,8 +6,7 @@ const blogSchema = new mongoose.Schema({
   authorId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
-  subscribedUserId: String,
-  activeSubscriber: Boolean,
+  subscribers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 
 const Blog = mongoose.model("Blog", blogSchema);
